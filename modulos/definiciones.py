@@ -143,49 +143,8 @@ def buscar_resultado():
                 print(f"LA PARTIDA HA ACABADO EN EMPATE !!")
                 print("---------------------------------\r\n")
                 
-        empate = False
-        cambio_turno()
-
-def verificacion_final():
-    """
-    Función para verificar el estado de la partida
-    """
-    
-    global game_on
-    global comienzo_juego
-    global ganador
-    empate = True
-    tablero_lleno = False
-    
-    buscar_resultado()
-    
-    if ganador == False:
-        
-        for x in tablero.values():
-            
-            if x ==  ' ':
-                empate = False
-            
-            else:
-                tablero_lleno = True            
-            
-        cambio_turno()
-        
-    if ganador == True:
-        
-        clear_output()
-        print(f'HA GANADO EL {turno}, ENHORABUENA !!')
-        print(f'HA GANADO EL {turno}, ENHORABUENA !!\r\n')
-        
-        volver_jugar()
-    
-    if empate == True and tablero_lleno == True:
-        
-        clear_output()
-        print(f'LA PARTIDA HA ACABADO EN EMPATE !!')
-        print(f'LA PARTIDA HA ACABADO EN EMPATE !!\r\n')
-        
-        volver_jugar()
+    empate = False
+    cambio_turno()
 
 def volver_jugar():
     """
