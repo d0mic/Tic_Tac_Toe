@@ -1,35 +1,31 @@
 
 from IPython.display import clear_output
 
-def start_variables():
-    """
-    Function that stablishes the default values of the variables for the start of the game or replay.
-    """
-    #Global variables
-    global game_on
-    global start_game
-    global winner
-    global draw
-    global position
-    global turn
-    global player1
-    global player2
-    global table
+#Variables
 
-    #Game variables
-    game_on = True
-    start_game = True
-    winner = False
-    draw = False
+#Global variables
+global game_on
+global playing
+global winner
+global draw
+global position
+global turn
+global table
+
+#Game variables
+game_on = True
+playing = True
+winner = False
+draw = False
     
-    #Players variables
-    position = ''
-    turn = 'Player 1 (X)'
-    player1 = 'X'
-    player2 = 'O'
+#Players variables
+position = ''
+turn = 'Player 1 (X)'
     
-    #Table variable. Stablishes a dictionary with table values.
-    table = {'1':' ','2':' ','3':' ','4':' ','5':' ','6':' ','7':' ','8':' ','9':' ',}
+#Table variable. Stablishes a dictionary with table values.
+table = {'1':' ','2':' ','3':' ','4':' ','5':' ','6':' ','7':' ','8':' ','9':' ',}
+
+#Functions
 
 def display_board():
     """
@@ -68,6 +64,8 @@ def ask_position():
     while True:
         
         global position
+        global table
+        global turn
 
         #Asks the player for the next move
         position = input('Choose your next move (1-9): ') 
@@ -75,7 +73,7 @@ def ask_position():
         #Verifies that the data introduced is an int, not str
         if position.isdigit() == False:
             #clear_output()
-            print('Not a valid choice. Choose a number between 1 and 9.')
+            print('Invalid choice. Choose a number between 1 and 9.')
             
         else:
             if int(position) in range(1,10):
@@ -83,7 +81,7 @@ def ask_position():
 
                 #Verifies that selected position is not ocuppied
                 if table[position] != ' ':
-                    print('This position is ocuppied, please select other!')
+                    print('Invalid choice. Select other position!')
                     continue
                 else:
                     if turn == 'Player 1 (X)':
@@ -94,7 +92,7 @@ def ask_position():
                         break
             else:
                 #clear_output()
-                print('Not a valid choice. Choose a number between 1 and 9.')
+                print('Invalid choice. Choose a number between 1 and 9.')
 
 def search_result():
     """
@@ -102,8 +100,9 @@ def search_result():
     """
     global winner
     global draw
+    global table
 
-    #Con esta serie de if's, se comprueba si algún jugador ha ganado
+    #Conditions for winning
     if (table['1'] == table['2'] == table['3'] == 'X') or (table['1'] == table['2'] == table['3'] == 'O'):
         winner = True
     if (table['4'] == table['5'] == table['6'] == 'X') or (table['4'] == table['5'] == table['6'] == 'O'):
@@ -121,46 +120,58 @@ def search_result():
     if (table['3'] == table['5'] == table['7'] == 'X') or (table['3'] == table['5'] == table['7'] == 'O'):
         winner = True
     
-    #If there is a winner, shows a congrats message
-    if winner == True:
-        print("\r\n---------------------------------")
-        print(f"THE {turn} WINS THE GAME !!")
-        print("---------------------------------\r\n")
-    
     else:
         #Search if there is any movement left, if not the game ends as a draw
         for x in table.values():
             if x == ' ':
+                draw = False
                 break
             else:
                 draw = True
-                print("\r\n---------------------------------")
-                print(f"THE GAME ENDED AS DRAW !!")
-                print("---------------------------------\r\n")
-                
-    draw = False
-    turn_change()
 
 def replay():
     """
-    Función that asks if players want to replay or end the game.
+    Function that asks if players want to replay or end the game.
     """
     
     global game_on
-    global start_game
+    global playing
     global winner
+    global draw
+    global position
+    global table
+    global turn
     
-    answer = input('Quereis volver a jugar? (y/n): ')
+    answer = input('Do you want to play again? (y/n): ')
         
     if (answer == 'y') == True:
             
-        start_game = True
+        #Game variables
+        game_on = True
+        playing = True
         winner = False
+        draw = False
+            
+        #Players variables
+        position = ''
+        turn_change()
+            
+        #Table variable. Stablishes a dictionary with table values.
+        table = {'1':' ','2':' ','3':' ','4':' ','5':' ','6':' ','7':' ','8':' ','9':' '}
         
     if (answer == 'n') == True:
             
         clear_output()
         print('Good Bye !!')
         game_on = False
-        start_game = True
-        winner = False
+
+#Decorators
+
+def table_dec(original):
+
+    def wrap_func():
+
+        print(f"*** It's {turn} turn ***")
+        original()
+
+    return wrap_func
